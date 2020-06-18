@@ -2,10 +2,11 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { RootStateType, PostType } from './types';
 import {fetchPosts} from './store/actions/posts'
-import Navbar from './components/Layout/Navbar';
+import Navbar from './components/Layout/Navbar/Navbar';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import Home from './components/Layout/Pages/Home';
-import Page404 from './components/Layout/Pages/Page404';
+import Home from './components/Pages/Home/Home';
+import Page404 from './components/Pages/Page404/Page404';
+import Login from './components/Pages/Login/Login';
 
 interface OwnState{
 
@@ -23,9 +24,6 @@ interface OwnProps{
 
 }
 
-const Login = () => {
-    return <div>Login</div>;
-}
 const SignUp = () => {
     return <div>SignUp</div>;
 }

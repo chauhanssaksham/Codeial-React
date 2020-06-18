@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import PostItem from '../../Posts';
-import { PostType } from '../../../../types';
+import PostItem from '../../Layout/Posts';
+import { PostType } from '../../../types';
 import { RouteComponentProps } from 'react-router-dom';
 
 interface Props extends RouteComponentProps{
