@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 interface Props {
     
@@ -57,9 +58,9 @@ export default class Navbar extends Component<Props, State> {
                 </div>
                 <div className="nav-links">
                     <ul>
-                    <li>Log in</li>
-                    <li>Log out</li>
-                    <li>Register</li>
+                    <li><Link to='/login'>Log in</Link></li>
+                    <li><Link to='/logout'>Log out</Link></li>
+                    <li><Link to='/signup'>Register</Link></li>
                     </ul>
                 </div>
                 </div>

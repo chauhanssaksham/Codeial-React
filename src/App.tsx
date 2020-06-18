@@ -2,8 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { RootStateType, PostType } from './types';
 import {fetchPosts} from './store/actions/posts'
-import PostItem from './components/Layout/Posts/PostItem';
-import Navbar from './components/Layout/Navbar/Navbar';
+import Navbar from './components/Layout/Navbar';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import Home from './components/Layout/Pages/Home';
+import Page404 from './components/Layout/Pages/Page404';
 
 interface OwnState{
 
@@ -21,6 +23,13 @@ interface OwnProps{
 
 }
 
+const Login = () => {
+    return <div>Login</div>;
+}
+const SignUp = () => {
+    return <div>SignUp</div>;
+}
+
 type Props = StateProps & DispatchProps & OwnProps;
 
 class App extends Component<Props, OwnState>{
@@ -31,14 +40,19 @@ class App extends Component<Props, OwnState>{
     render(){
         const {posts} = this.props;
 
-        return (<>
+        return (
+        <Router>
             <Navbar />
-            <div className="posts-list">
-                {posts.map((post) => (
-                <PostItem post={post} key={post._id} />
-                ))}
-            </div>
-        </>);
+            <Switch>
+                <Route exact path='/' render={(props)=>{
+                    return <Home {...props} posts={posts} />
+                }} />
+                <Route path='/signup' component={SignUp} />
+                <Route path='/login' component={Login} />
+                <Route component={Page404} />
+            </Switch>
+        </Router>
+        );
     }
 }
 

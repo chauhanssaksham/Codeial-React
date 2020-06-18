@@ -23,7 +23,6 @@ export const fetchPosts = ():any => {
                 // console.log('response');
                 return response.json();
             }).then(data => {
-                console.log(data);
                 dispatch(updatePosts(data.data.posts));
             })
     }
