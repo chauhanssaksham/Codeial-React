@@ -1,6 +1,7 @@
 import { PostType, AppActions, RootStateType } from "../../types.d";
 import { Dispatch } from "react";
 import { AnyAction } from "redux";
+import { APIUrls } from "../../helpers/URLs";
 
 export const ADD_POSTS = 'ADD_POSTS';
 export type ADD_POSTS = typeof ADD_POSTS;
@@ -35,7 +36,7 @@ export const updatePosts = (posts:PostType[]):PostsActionType => {
 
 export const fetchPosts = ():any => {
     return (dispatch:Dispatch<AppActions>, getState: () => RootStateType ) => {
-        const url = `http://codeial.com:8000/api/v2/posts?page=1&limit=5`;
+        const url = APIUrls.fetchPosts();
         fetch(url)
             .then(response => {
                 // console.log('response');
