@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { RootStateType, PostType } from './types';
 import {fetchPosts} from './store/actions/posts'
+import PostItem from './components/Posts/PostItem';
 
 interface OwnState{
 
@@ -27,8 +28,13 @@ class App extends Component<Props, OwnState>{
     }
 
     render(){
-        console.log('Props: ', this.props);
-        return (<div>Hello</div>);
+        const {posts} = this.props;
+
+        return (<div className="posts-list">
+        {posts.map((post) => (
+          <PostItem post={post} key={post._id} />
+        ))}
+      </div>);
     }
 }
 
