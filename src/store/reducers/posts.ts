@@ -1,4 +1,5 @@
-import { PostsStateType, PostsActionType, UPDATE_POSTS } from "../../types.d";
+import { PostsStateType } from "../../types.d";
+import { PostsActionType, UPDATE_POSTS } from "../actions/posts";
 
 const initialPostsState: PostsStateType =  [];
 

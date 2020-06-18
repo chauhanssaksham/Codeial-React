@@ -1,5 +1,23 @@
-import { PostType, PostsActionType, ADD_POSTS, AppActions, RootStateType, UPDATE_POSTS } from "../../types.d";
+import { PostType, AppActions, RootStateType } from "../../types.d";
 import { Dispatch } from "react";
+import { AnyAction } from "redux";
+
+export const ADD_POSTS = 'ADD_POSTS';
+export type ADD_POSTS = typeof ADD_POSTS;
+export const UPDATE_POSTS = 'UPDATE_POSTS';
+export type UPDATE_POSTS = typeof UPDATE_POSTS;
+
+export interface addPostsAction extends AnyAction{
+    type: ADD_POSTS,
+    posts: PostType[]
+}
+
+export interface updatePostsAction extends AnyAction{
+    type: UPDATE_POSTS,
+    posts: PostType[]
+}
+
+export type PostsActionType = addPostsAction | updatePostsAction;
 
 export const addPosts = (posts:PostType[]):PostsActionType => {
     return {

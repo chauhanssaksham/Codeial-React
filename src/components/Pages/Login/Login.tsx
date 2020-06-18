@@ -23,8 +23,6 @@ class Login extends Component<Props, State>{
         this.setState({
             ...this.state,
             [e.target.name]: e.target.value
-        }, ()=>{
-            console.log(this.state);
         });
     }
 
