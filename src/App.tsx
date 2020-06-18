@@ -1,12 +1,41 @@
-import React from 'react';
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import { RootStateType } from './types';
 
+interface OwnState{
 
-function App() {
-  return (
-    <div className="App">
-        Hello
-    </div>
-  );
 }
 
-export default App;
+interface StateProps{
+
+}
+
+interface DispatchProps{
+
+}
+
+interface OwnProps{
+
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
+
+class App extends Component<Props, OwnState>{
+    constructor(props:Props){
+        super(props);
+
+    }
+
+    render(){
+        
+        return (<div></div>);
+    }
+}
+
+const mapStateToProps = (state: RootStateType) => {
+    return {
+        
+    }
+}
+
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps)(App)
