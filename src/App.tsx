@@ -2,7 +2,8 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { RootStateType, PostType } from './types';
 import {fetchPosts} from './store/actions/posts'
-import PostItem from './components/Posts/PostItem';
+import PostItem from './components/Layout/Posts/PostItem';
+import Navbar from './components/Layout/Navbar/Navbar';
 
 interface OwnState{
 
@@ -30,11 +31,14 @@ class App extends Component<Props, OwnState>{
     render(){
         const {posts} = this.props;
 
-        return (<div className="posts-list">
-        {posts.map((post) => (
-          <PostItem post={post} key={post._id} />
-        ))}
-      </div>);
+        return (<>
+            <Navbar />
+            <div className="posts-list">
+                {posts.map((post) => (
+                <PostItem post={post} key={post._id} />
+                ))}
+            </div>
+        </>);
     }
 }
 

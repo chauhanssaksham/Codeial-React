@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { PostType } from '../../types';
+import { PostType } from '../../../types';
 
 interface Props {
     post: PostType
