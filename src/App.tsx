@@ -1,17 +1,18 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { RootStateType } from './types';
+import { RootStateType, PostType } from './types';
+import {fetchPosts} from './store/actions/posts'
 
 interface OwnState{
 
 }
 
 interface StateProps{
-
+    posts: PostType[]
 }
 
 interface DispatchProps{
-
+    fetchPosts: () => void
 }
 
 interface OwnProps{
@@ -21,21 +22,25 @@ interface OwnProps{
 type Props = StateProps & DispatchProps & OwnProps;
 
 class App extends Component<Props, OwnState>{
-    constructor(props:Props){
-        super(props);
-
+    componentDidMount() {
+        this.props.fetchPosts();
     }
 
     render(){
-        
-        return (<div></div>);
+        console.log('Props: ', this.props);
+        return (<div>Hello</div>);
     }
 }
 
-const mapStateToProps = (state: RootStateType) => {
+const mapStateToProps = (state: RootStateType):StateProps => {
     return {
-        
+        posts: state.posts
     }
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps)(App)
+const mapDispatchToProps:DispatchProps = {
+    fetchPosts
+}
+
+
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(App)

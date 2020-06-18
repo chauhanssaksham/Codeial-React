@@ -6,7 +6,6 @@ import CssBaseLine from '@material-ui/core/CssBaseline'
 import { configureStore } from './store';
 
 const store = configureStore();
-console.log(store.getState());
 
 ReactDOM.render(
   <React.StrictMode>
