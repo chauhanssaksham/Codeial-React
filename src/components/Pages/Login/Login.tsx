@@ -5,22 +5,27 @@ interface Props{
 }
 
 interface State{
+    email: string,
+    password: string
+}
 
+const initialState: State = {
+    email: '',
+    password: ''
 }
 
 class Login extends Component<Props, State>{
-    emailInputRef: React.RefObject<HTMLInputElement>;
-    passwordInputRef: React.RefObject<HTMLInputElement>;
     constructor(props:Props){
         super(props);
-        this.emailInputRef = React.createRef<HTMLInputElement>();
-        this.passwordInputRef = React.createRef<HTMLInputElement>();
+        this.state = initialState;
     }
-
-    handleFormSubmit = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
-        console.log('this.emailInputRef: ', this.emailInputRef.current?.value);
-        console.log('this.passwordInputRef: ', this.passwordInputRef.current?.value);
+    handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            ...this.state,
+            [e.target.name]: e.target.value
+        }, ()=>{
+            console.log(this.state);
+        });
     }
 
     render(){
@@ -28,13 +33,29 @@ class Login extends Component<Props, State>{
             <form className="login-form">
                 <span className="login-signup-header">Log In</span>
                 <div className="field">
-                    <input type="email" placeholder="Email" required ref={this.emailInputRef} />
+                    <input
+                        name="email"
+                        type="email" 
+                        placeholder="Email" 
+                        required 
+                        // ref={this.emailInputRef} 
+                        onChange={this.handleInputChange}
+                        value={this.state.email}
+                    />
                 </div>
                 <div className="field">
-                    <input type="password" placeholder="Password" required ref={this.passwordInputRef} />
+                    <input 
+                        name="password"
+                        type="password" 
+                        placeholder="Password" 
+                        required 
+                        // ref={this.passwordInputRef} 
+                        onChange={this.handleInputChange}
+                        value={this.state.password}
+                    />
                 </div>
                 <div className="field">
-                    <button onClick={this.handleFormSubmit}>Log In</button>
+                    <button>Log In</button>
                 </div>
             </form>
         );
