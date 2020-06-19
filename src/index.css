@@ -404,11 +404,11 @@ nav .nav-links ul li:hover {
   padding: 9px;
   border: none;
   outline: none;
-}
-.field button:hover {
   cursor: pointer;
 }
-
+.field button:disabled{
+    cursor:not-allowed;
+}
 /* SETTINGS and USERPROFILE */
 .settings {
   display: inline-flex;

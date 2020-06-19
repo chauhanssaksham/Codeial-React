@@ -1,8 +1,22 @@
 import React, {Component} from 'react'
+import {login} from '../../../store/actions/auth';
+import { RootStateType, AuthStateType } from '../../../types';
+import { connect } from 'react-redux';
 
-interface Props{
+interface StateProps{
+    auth: AuthStateType
+}
+
+interface DispatchProps{
+    login: (email: string, password:string) => void
+}
+
+interface OwnProps{
 
 }
+
+type Props = StateProps & DispatchProps & OwnProps;
+
 
 interface State{
     email: string,
@@ -26,10 +40,23 @@ class Login extends Component<Props, State>{
         });
     }
 
+    handleFormSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const {email, password} = this.state;
+
+        if (email && password && !this.props.auth.inProgress){
+            console.log("here");
+            this.props.login(email, password);
+        }
+    }
+
     render(){
+        const {error, inProgress} = this.props.auth;
+
         return (
-            <form className="login-form">
+            <form className="login-form" onSubmit={this.handleFormSubmit}>
                 <span className="login-signup-header">Log In</span>
+                {error && <div className='alert error-dailog'>{error}</div>}
                 <div className="field">
                     <input
                         name="email"
@@ -53,11 +80,24 @@ class Login extends Component<Props, State>{
                     />
                 </div>
                 <div className="field">
-                    <button>Log In</button>
+                    {inProgress? 
+                        <button disabled={inProgress}>Loggging In...</button>:
+                        <button>Log In</button>
+                    }
                 </div>
             </form>
         );
     }
 }
 
-export default Login
+const mapStateToProps = (state: RootStateType):StateProps => {
+    return {
+        auth: state.auth
+    }
+}
+
+const mapDispatchToProps:DispatchProps = {
+    login
+}
+
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Login)

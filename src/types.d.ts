@@ -1,4 +1,5 @@
 import { PostsActionType } from "./store/actions/posts";
+import { AuthActionTypes } from "./store/actions/auth";
 
 export type UserType = {
     _id: string,
@@ -31,7 +32,7 @@ export type PostType = {
 export type PostsStateType = PostType[];
 
 export type AuthStateType = {
-    user: any,
+    user: UserType | null,
     error: string | null,
     isLoggedIn: boolean,
     inProgress: boolean
@@ -42,4 +43,4 @@ export type RootStateType = {
     auth: AuthStateType
 }
 
-export type AppActions = PostsActionType ;
+export type AppActions = PostsActionType | AuthActionTypes ;
