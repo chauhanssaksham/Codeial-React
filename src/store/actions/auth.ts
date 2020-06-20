@@ -17,6 +17,10 @@ export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 export type SIGNUP_SUCCESS = typeof SIGNUP_SUCCESS;
 export const SIGNUP_FAILED = 'SIGNUP_FAILED';
 export type SIGNUP_FAILED = typeof SIGNUP_FAILED;
+export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
+export type AUTHENTICATE_USER = typeof AUTHENTICATE_USER;
+export const LOG_OUT = 'LOG_OUT';
+export type LOG_OUT = typeof LOG_OUT;
 
 export interface startLoginAction extends AnyAction{
     type: LOGIN_START;
@@ -40,8 +44,15 @@ export interface signupFailedAction extends AnyAction{
     type: SIGNUP_FAILED,
     message: string
 }
+export interface authenticateUserAction extends AnyAction{
+    type: AUTHENTICATE_USER,
+    user: UserType
+}
+export interface logoutAction extends AnyAction{
+    type: LOG_OUT
+}
 
-export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction;
+export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction;
 
 
 export function startLogin():startLoginAction{
@@ -84,6 +95,19 @@ export function signupFailed(msg: string):signupFailedAction{
     }
 }
 
+export function authenticateUser(user: UserType):authenticateUserAction{
+    return {
+        type:AUTHENTICATE_USER,
+        user
+    }
+}
+
+export function logout():logoutAction{
+    return {
+        type: LOG_OUT
+    }
+}
+
 
 export function login(formBody: {email: string, password:string}):any{
     return (dispatch: Dispatch<AppActions>, getState: () => RootStateType) => {
@@ -95,8 +119,8 @@ export function login(formBody: {email: string, password:string}):any{
             }
         }).then(response => {
             if (response.data.success){
-                dispatch(loginSuccess(response.data.user));
-                //TODO: STORE JWT in local storage
+                localStorage.setItem('token', response.data.data.token);
+                dispatch(loginSuccess(response.data.data.user));
                 return;
             } else {
                 dispatch(loginFailed(response.data.message));
@@ -120,8 +144,8 @@ export function signup(formBody: {name: string, email:string, password: string, 
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then(response => {
-            console.log(response);
             if (response.data.success){
+                localStorage.setItem('token', response.data.data.token);
                 dispatch(signupSuccess(response.data.data.user));
                 return;
             } else {

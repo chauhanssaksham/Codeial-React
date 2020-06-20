@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { RootStateType, PostType } from './types';
+import { RootStateType, PostType, UserType } from './types';
 import {fetchPosts} from './store/actions/posts'
 import Navbar from './components/Layout/Navbar/Navbar';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
@@ -8,6 +8,8 @@ import Home from './components/Pages/Home/Home';
 import Page404 from './components/Pages/Page404/Page404';
 import Login from './components/Pages/Auth/Login';
 import Signup from './components/Pages/Auth/Signup';
+import jwtDecode from 'jwt-decode';
+import {authenticateUser} from './store/actions/auth'
 
 interface OwnState{
 
@@ -18,7 +20,8 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    fetchPosts: () => void
+    fetchPosts: () => void,
+    authenticateUser: (user: UserType) => void
 }
 
 interface OwnProps{
@@ -30,6 +33,16 @@ type Props = StateProps & DispatchProps & OwnProps;
 class App extends Component<Props, OwnState>{
     componentDidMount() {
         this.props.fetchPosts();
+
+        const token = localStorage.token;
+        if (token){
+            const user:UserType = jwtDecode(token);
+            this.props.authenticateUser({
+                _id: user._id,
+                name: user.name,
+                email: user.email
+            });
+        }
     }
 
     render(){
@@ -58,7 +71,8 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 }
 
 const mapDispatchToProps:DispatchProps = {
-    fetchPosts
+    fetchPosts,
+    authenticateUser
 }
 
 
