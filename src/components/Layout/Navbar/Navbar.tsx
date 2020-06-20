@@ -1,17 +1,32 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { RootStateType, AuthStateType } from '../../../types';
 
-interface Props {
+interface OwnState{
+
+}
+
+interface StateProps{
+    auth: AuthStateType
+}
+
+interface DispatchProps{
     
 }
-interface State {
-    
+
+interface OwnProps{
+
 }
 
-export default class Navbar extends Component<Props, State> {
-    state = {}
+type Props = StateProps & DispatchProps & OwnProps;
+
+
+class Navbar extends Component<Props, OwnState> {
 
     render() {
+        const {auth} = this.props;
+
         return (
             <nav className="nav">
                 <div className="left-div">
@@ -48,19 +63,27 @@ export default class Navbar extends Component<Props, State> {
                 </div>
                 </div>
                 <div className="right-nav">
-                <div className="user">
-                    <img
-                    src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
-                    alt="user-dp"
-                    id="user-dp"
-                    />
-                    <span>John Doe</span>
-                </div>
+                {auth.isLoggedIn && 
+                    <div className="user">
+                        <img
+                        src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
+                        alt="user-dp"
+                        id="user-dp"
+                        />
+                        <span>{auth.user?.name}</span>
+                    </div>
+                }
                 <div className="nav-links">
                     <ul>
-                    <li><Link to='/login'>Log in</Link></li>
-                    <li><Link to='/logout'>Log out</Link></li>
-                    <li><Link to='/signup'>Register</Link></li>
+                    {!auth.isLoggedIn && 
+                        <>
+                        <li><Link to='/login'>Log in</Link></li>
+                        <li><Link to='/signup'>Register</Link></li>
+                        </>
+                    }
+                    {auth.isLoggedIn && 
+                        <li><Link to='/logout'>Log out</Link></li>
+                    }
                     </ul>
                 </div>
                 </div>
@@ -68,3 +91,16 @@ export default class Navbar extends Component<Props, State> {
         )
     }
 }
+
+const mapStateToProps = (state: RootStateType):StateProps => {
+    return {
+        auth: state.auth
+    }
+}
+
+const mapDispatchToProps:DispatchProps = {
+
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
