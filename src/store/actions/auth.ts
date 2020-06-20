@@ -3,6 +3,7 @@ import { Dispatch } from "react";
 import { AppActions, RootStateType, UserType } from "../../types";
 import { getFormBody } from "../../helpers/utils";
 import { APIUrls } from "../../helpers/URLs";
+import axios from 'axios';
 
 export const LOGIN_START = 'LOGIN_START';
 export type LOGIN_START = typeof LOGIN_START;
@@ -84,51 +85,50 @@ export function signupFailed(msg: string):signupFailedAction{
 }
 
 
-export function login(email:string, password: string):any{
+export function login(formBody: {email: string, password:string}):any{
     return (dispatch: Dispatch<AppActions>, getState: () => RootStateType) => {
         dispatch(startLogin());
         const url = APIUrls.login();
-        fetch(url, {
-            method: 'POST',
+        axios.post(url, getFormBody(formBody), {
             headers: {
-                'Content-Type': 'application/x-www-form-url-encoded'
-            },
-            body: getFormBody({email, password})
-        }).then(response => response.json())
-        .then(data => {
-            if (data.success){
-                dispatch(loginSuccess(data.data.user));
-                //TODO: CHECK WITH A CORRECT ID-PW AND STORE JWT in local storage
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then(response => {
+            if (response.data.success){
+                dispatch(loginSuccess(response.data.user));
+                //TODO: STORE JWT in local storage
                 return;
             } else {
-                dispatch(loginFailed(data.message));
+                dispatch(loginFailed(response.data.message));
             }
+        }).catch(err => {
+            dispatch(loginFailed(err.response.data.message));
         });
     }
 }
 
-export function signup(name: string, email:string, password: string, confirm_password:string):any{
+export function signup(formBody: {name: string, email:string, password: string, confirm_password:string}):any{
     return (dispatch: Dispatch<AppActions>, getState: () => RootStateType) => {
         dispatch(startSignup());
         const url = APIUrls.signup();
-        if (password !== confirm_password){
+        if (formBody.password !== formBody.confirm_password){
             dispatch(signupFailed("Passwords don't match"));
             return;
         }
-        fetch(url, {
-            method: 'POST',
+        axios.post(url, getFormBody(formBody), {
             headers: {
-                'Content-Type': 'application/x-www-form-url-encoded'
-            },
-            body: getFormBody({name,email, password, confirm_password})
-        }).then(response => response.json())
-        .then(data => {
-            if (data.success){
-                dispatch(signupSuccess(data.data.user));
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then(response => {
+            console.log(response);
+            if (response.data.success){
+                dispatch(signupSuccess(response.data.data.user));
                 return;
             } else {
-                dispatch(signupFailed(data.message));
+                dispatch(signupFailed(response.data.message));
             }
+        }).catch(err => {
+            dispatch(signupFailed(err.response.data.message));
         });
     }
 }

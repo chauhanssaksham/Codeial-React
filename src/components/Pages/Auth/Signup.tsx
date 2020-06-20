@@ -8,7 +8,7 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    signup: (name: string, email: string, password:string, confirm_password:string) => void
+    signup: (formBody: {name: string, email: string, password:string, confirm_password:string}) => void
 }
 
 interface OwnProps{
@@ -48,9 +48,8 @@ class Signup extends Component<Props, State>{
         e.preventDefault();
         const {name, email, password, confirm_password} = this.state;
 
-        if (email && password && !this.props.auth.inProgress){
-            console.log("here");
-            this.props.signup(name, email, password, confirm_password);
+        if (name && email && password && confirm_password && !this.props.auth.inProgress){
+            this.props.signup(this.state);
         }
     }
 

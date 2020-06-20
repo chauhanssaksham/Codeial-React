@@ -8,7 +8,7 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    login: (email: string, password:string) => void
+    login: (formBody: {email: string, password:string}) => void
 }
 
 interface OwnProps{
@@ -43,10 +43,9 @@ class Login extends Component<Props, State>{
     handleFormSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const {email, password} = this.state;
-
         if (email && password && !this.props.auth.inProgress){
             console.log("here");
-            this.props.login(email, password);
+            this.props.login(this.state);
         }
     }
 
