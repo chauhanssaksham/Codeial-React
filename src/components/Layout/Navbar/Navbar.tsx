@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { RootStateType, AuthStateType } from '../../../types';
+import {logout} from '../../../store/actions/auth'
 
 interface OwnState{
 
@@ -12,7 +13,7 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    
+    logout: () => void
 }
 
 interface OwnProps{
@@ -23,6 +24,10 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 
 class Navbar extends Component<Props, OwnState> {
+
+    logOut = () => {
+        this.props.logout();
+    }
 
     render() {
         const {auth} = this.props;
@@ -82,7 +87,7 @@ class Navbar extends Component<Props, OwnState> {
                         </>
                     }
                     {auth.isLoggedIn && 
-                        <li><Link to='/logout'>Log out</Link></li>
+                        <li onClick={this.logOut}>Log out</li>
                     }
                     </ul>
                 </div>
@@ -99,7 +104,7 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 }
 
 const mapDispatchToProps:DispatchProps = {
-
+    logout
 }
 
 
