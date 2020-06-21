@@ -75,7 +75,8 @@ class Navbar extends Component<Props, OwnState> {
                         alt="user-dp"
                         id="user-dp"
                         />
-                        <span>{auth.user?.name}</span>
+                        <span><Link to='/settings'>{auth.user?.name}</Link></span>
+                        
                     </div>
                 }
                 <div className="nav-links">

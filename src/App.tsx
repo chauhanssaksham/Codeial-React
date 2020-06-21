@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { RootStateType, PostType, UserType } from './types';
+import { RootStateType, UserType, PostsStateType, AuthStateType } from './types';
 import {fetchPosts} from './store/actions/posts'
 import Navbar from './components/Layout/Navbar/Navbar';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
@@ -10,13 +10,15 @@ import Login from './components/Pages/Auth/Login';
 import Signup from './components/Pages/Auth/Signup';
 import jwtDecode from 'jwt-decode';
 import {authenticateUser} from './store/actions/auth'
+import PrivateRoute from './components/routing/PrivateRoute';
 
 interface OwnState{
 
 }
 
 interface StateProps{
-    posts: PostType[]
+    posts: PostsStateType,
+    auth: AuthStateType
 }
 
 interface DispatchProps{
@@ -29,6 +31,10 @@ interface OwnProps{
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
+
+const Settings = () => {
+    return <div>Settings</div>
+}
 
 class App extends Component<Props, OwnState>{
     componentDidMount() {
@@ -57,6 +63,7 @@ class App extends Component<Props, OwnState>{
                 }} />
                 <Route path='/signup' component={Signup} />
                 <Route path='/login' component={Login} />
+                <PrivateRoute path='/settings' component={Settings} isLoggedIn={this.props.auth.isLoggedIn} />
                 <Route component={Page404} />
             </Switch>
         </Router>
@@ -66,7 +73,8 @@ class App extends Component<Props, OwnState>{
 
 const mapStateToProps = (state: RootStateType):StateProps => {
     return {
-        posts: state.posts
+        posts: state.posts,
+        auth: state.auth
     }
 }
 
