@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {signup} from '../../../store/actions/auth';
+import {signup, clearAuthErrors} from '../../../store/actions/auth';
 import { RootStateType, AuthStateType } from '../../../types';
 import { connect } from 'react-redux';
 
@@ -8,7 +8,8 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    signup: (formBody: {name: string, email: string, password:string, confirm_password:string}) => void
+    signup: (formBody: {name: string, email: string, password:string, confirm_password:string}) => void,
+    clearAuthErrors: () => void
 }
 
 interface OwnProps{
@@ -37,6 +38,11 @@ class Signup extends Component<Props, State>{
         super(props);
         this.state = initialState;
     }
+    componentWillUnmount() {
+        this.props.clearAuthErrors();
+    }
+    
+
     handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
@@ -118,7 +124,8 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 }
 
 const mapDispatchToProps:DispatchProps = {
-    signup
+    signup,
+    clearAuthErrors
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Signup)

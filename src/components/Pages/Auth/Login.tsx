@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {login} from '../../../store/actions/auth';
+import {login, clearAuthErrors} from '../../../store/actions/auth';
 import { RootStateType, AuthStateType } from '../../../types';
 import { connect } from 'react-redux';
 
@@ -8,7 +8,8 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    login: (formBody: {email: string, password:string}) => void
+    login: (formBody: {email: string, password:string}) => void,
+    clearAuthErrors: () => void
 }
 
 interface OwnProps{
@@ -33,6 +34,11 @@ class Login extends Component<Props, State>{
         super(props);
         this.state = initialState;
     }
+    componentWillUnmount() {
+        this.props.clearAuthErrors();
+    }
+    
+
     handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
@@ -96,7 +102,8 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 }
 
 const mapDispatchToProps:DispatchProps = {
-    login
+    login,
+    clearAuthErrors
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Login)

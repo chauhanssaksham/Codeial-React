@@ -19,6 +19,8 @@ export const SIGNUP_FAILED = 'SIGNUP_FAILED';
 export type SIGNUP_FAILED = typeof SIGNUP_FAILED;
 export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
 export type AUTHENTICATE_USER = typeof AUTHENTICATE_USER;
+export const CLEAR_AUTH_ERRORS = 'CLEAR_AUTH_ERRORS'
+export type CLEAR_AUTH_ERRORS = typeof CLEAR_AUTH_ERRORS;
 export const LOG_OUT = 'LOG_OUT';
 export type LOG_OUT = typeof LOG_OUT;
 
@@ -51,8 +53,11 @@ export interface authenticateUserAction extends AnyAction{
 export interface logoutAction extends AnyAction{
     type: LOG_OUT
 }
+export interface clearAuthErrorsAction extends AnyAction{
+    type: CLEAR_AUTH_ERRORS
+}
 
-export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction;
+export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction | clearAuthErrorsAction;
 
 
 export function startLogin():startLoginAction{
@@ -105,6 +110,12 @@ export function authenticateUser(user: UserType):authenticateUserAction{
 export function logout():logoutAction{
     return {
         type: LOG_OUT
+    }
+}
+
+export function clearAuthErrors():clearAuthErrorsAction{
+    return {
+        type: CLEAR_AUTH_ERRORS
     }
 }
 
