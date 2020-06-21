@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {login, clearAuthErrors} from '../../../store/actions/auth';
 import { RootStateType, AuthStateType } from '../../../types';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 interface StateProps{
     auth: AuthStateType
@@ -56,8 +57,10 @@ class Login extends Component<Props, State>{
     }
 
     render(){
-        const {error, inProgress} = this.props.auth;
-
+        const {error, inProgress, isLoggedIn} = this.props.auth;
+        if (isLoggedIn){
+            return <Redirect to='/' />
+        }
         return (
             <form className="login-form" onSubmit={this.handleFormSubmit}>
                 <span className="login-signup-header">Log In</span>
