@@ -1,4 +1,4 @@
-import { Route, Redirect, RouteComponentProps } from "react-router-dom";
+import { Route, Redirect } from "react-router-dom";
 import React from "react";
 
 interface PrivateRouteProps{

@@ -11,6 +11,7 @@ import Signup from './components/Pages/Auth/Signup';
 import jwtDecode from 'jwt-decode';
 import {authenticateUser} from './store/actions/auth'
 import PrivateRoute from './components/routing/PrivateRoute';
+import Settings from './components/Pages/Settings/Settings';
 
 interface OwnState{
 
@@ -31,10 +32,6 @@ interface OwnProps{
 }
 
 type Props = StateProps & DispatchProps & OwnProps;
-
-const Settings = () => {
-    return <div>Settings</div>
-}
 
 class App extends Component<Props, OwnState>{
     componentDidMount() {
