@@ -108,6 +108,7 @@ export function authenticateUser(user: UserType):authenticateUserAction{
 }
 
 export function logout():logoutAction{
+    localStorage.removeItem('token');
     return {
         type: LOG_OUT
     }

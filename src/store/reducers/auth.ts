@@ -40,7 +40,6 @@ function auth(state = initialAuthState, action: AuthActionTypes):AuthStateType{
                 user: action.user
             }
         case LOG_OUT:
-            localStorage.removeItem('token');
             return {
                 ...state,
                 user: null,
