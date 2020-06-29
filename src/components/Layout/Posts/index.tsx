@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { PostType } from '../../../types';
+import { Link } from 'react-router-dom';
 
 interface Props {
     post: PostType
@@ -15,12 +16,16 @@ class PostItem extends Component<Props, State> {
             <div className="post-wrapper" key={post._id}>
             <div className="post-header">
               <div className="post-avatar">
-                <img
-                  src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
-                  alt="user-pic"
-                />
+                <Link to={`/users/${post.user._id}`}>
+                    <img
+                    src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
+                    alt="user-pic"
+                    />
+                </Link>
                 <div>
-                  <span className="post-author">{post.user.name}</span>
+                  <Link to={`/users/${post.user._id}`}>
+                    <span className="post-author">{post.user.name}</span>
+                  </Link>
                   <span className="post-time">a minute ago</span>
                 </div>
               </div>
