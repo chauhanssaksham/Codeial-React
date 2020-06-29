@@ -60,7 +60,7 @@ class App extends Component<Props, OwnState>{
                 }} />
                 <Route path='/signup' component={Signup} />
                 <Route path='/login' component={Login} />
-                <PrivateRoute path='/settings' component={Settings} isLoggedIn={this.props.auth.isLoggedIn} />
+                <PrivateRoute path='/settings' component={Settings} isLoggedIn={this.props.auth.isLoggedIn} loading={this.props.auth.user_loading} />
                 <Route component={Page404} />
             </Switch>
         </Router>

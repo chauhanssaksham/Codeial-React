@@ -35,7 +35,8 @@ export type AuthStateType = {
     user: UserType | null,
     error: string | null,
     isLoggedIn: boolean,
-    inProgress: boolean
+    inProgress: boolean,
+    user_loading: boolean
 }
 
 export type RootStateType = {

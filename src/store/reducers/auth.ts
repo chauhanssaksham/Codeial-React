@@ -5,7 +5,8 @@ const initialAuthState:AuthStateType = {
     user: null,
     error: null,
     isLoggedIn: false,
-    inProgress: false
+    inProgress: false,
+    user_loading:true
 }
 
 function auth(state = initialAuthState, action: AuthActionTypes):AuthStateType{
@@ -15,15 +16,18 @@ function auth(state = initialAuthState, action: AuthActionTypes):AuthStateType{
             return {
                 ...state,
                 inProgress: true,
-                user: null
+                user: null,
+                user_loading:true
             }
         case LOGIN_SUCCESS:
         case SIGNUP_SUCCESS:
             return {
+                ...state,
                 user: action.user,
                 isLoggedIn: true,
                 error: null,
-                inProgress: false
+                inProgress: false,
+                user_loading:false
             }
         case LOGIN_FAILED:
         case SIGNUP_FAILED:
@@ -31,19 +35,22 @@ function auth(state = initialAuthState, action: AuthActionTypes):AuthStateType{
                 ...state,
                 inProgress: false,
                 error: action.message,
-                user: null
+                user: null,
+                user_loading:false
             }
         case AUTHENTICATE_USER:
             return{
                 ...state,
                 isLoggedIn: true,
-                user: action.user
+                user: action.user,
+                user_loading: false
             }
         case LOG_OUT:
             return {
                 ...state,
                 user: null,
-                isLoggedIn: false
+                isLoggedIn: false,
+                user_loading: false
             }
         case CLEAR_AUTH_ERRORS:
             return {
