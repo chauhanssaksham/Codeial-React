@@ -6,7 +6,7 @@ const initialAuthState:AuthStateType = {
     error: null,
     isLoggedIn: false,
     inProgress: false,
-    user_loading:true
+    user_loading: (localStorage.getItem('token') === null ? false:true)
 }
 
 function auth(state = initialAuthState, action: AuthActionTypes):AuthStateType{
