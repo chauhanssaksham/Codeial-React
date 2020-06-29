@@ -51,7 +51,6 @@ class Login extends Component<Props, State>{
         e.preventDefault();
         const {email, password} = this.state;
         if (email && password && !this.props.auth.inProgress){
-            console.log("here");
             this.props.login(this.state);
         }
     }

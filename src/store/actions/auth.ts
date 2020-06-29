@@ -23,6 +23,8 @@ export const CLEAR_AUTH_ERRORS = 'CLEAR_AUTH_ERRORS'
 export type CLEAR_AUTH_ERRORS = typeof CLEAR_AUTH_ERRORS;
 export const LOG_OUT = 'LOG_OUT';
 export type LOG_OUT = typeof LOG_OUT;
+export const SET_USER_LOADING = 'SET_USER_LOADING';
+export type SET_USER_LOADING = typeof SET_USER_LOADING;
 
 export interface startLoginAction extends AnyAction{
     type: LOGIN_START;
@@ -56,8 +58,11 @@ export interface logoutAction extends AnyAction{
 export interface clearAuthErrorsAction extends AnyAction{
     type: CLEAR_AUTH_ERRORS
 }
+export interface setUserLoadingAction extends AnyAction{
+    type: SET_USER_LOADING
+}
 
-export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction | clearAuthErrorsAction;
+export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction | clearAuthErrorsAction | setUserLoadingAction;
 
 
 export function startLogin():startLoginAction{
@@ -120,6 +125,11 @@ export function clearAuthErrors():clearAuthErrorsAction{
     }
 }
 
+export function setUserLoading():setUserLoadingAction{
+    return {
+        type: SET_USER_LOADING
+    }
+}
 
 export function login(formBody: {email: string, password:string}):any{
     return (dispatch: Dispatch<AppActions>, getState: () => RootStateType) => {
