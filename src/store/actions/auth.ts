@@ -4,6 +4,7 @@ import { AppActions, RootStateType, UserType } from "../../types";
 import { getFormBody } from "../../helpers/utils";
 import { APIUrls } from "../../helpers/URLs";
 import axios from 'axios';
+import setAuthToken from "../../helpers/setAuthTokenAxiosHeader";
 
 export const LOGIN_START = 'LOGIN_START';
 export type LOGIN_START = typeof LOGIN_START;
@@ -25,6 +26,10 @@ export const LOG_OUT = 'LOG_OUT';
 export type LOG_OUT = typeof LOG_OUT;
 export const SET_USER_LOADING = 'SET_USER_LOADING';
 export type SET_USER_LOADING = typeof SET_USER_LOADING;
+export const EDIT_USER_SUCCESSFUL = 'EDIT_USER_SUCCESSFUL';
+export type EDIT_USER_SUCCESSFUL = typeof EDIT_USER_SUCCESSFUL;
+export const EDIT_USER_FAILED = 'EDIT_USER_FAILED';
+export type EDIT_USER_FAILED = typeof EDIT_USER_FAILED;
 
 export interface startLoginAction extends AnyAction{
     type: LOGIN_START;
@@ -61,8 +66,16 @@ export interface clearAuthErrorsAction extends AnyAction{
 export interface setUserLoadingAction extends AnyAction{
     type: SET_USER_LOADING
 }
+export interface editUserSuccessfulAction extends AnyAction{
+    type: EDIT_USER_SUCCESSFUL,
+    user: UserType
+}
+export interface editUserFailedAction extends AnyAction{
+    type: EDIT_USER_FAILED,
+    error: string
+}
 
-export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction | clearAuthErrorsAction | setUserLoadingAction;
+export type AuthActionTypes = startLoginAction | loginFailedAction | loginSuccessAction | startSingupAction | signupFailedAction | signupSuccessAction | authenticateUserAction | logoutAction | clearAuthErrorsAction | setUserLoadingAction | editUserSuccessfulAction | editUserFailedAction;
 
 
 export function startLogin():startLoginAction{
@@ -131,6 +144,20 @@ export function setUserLoading():setUserLoadingAction{
     }
 }
 
+export function editUserSuccessful(user: UserType):editUserSuccessfulAction{
+    return {
+        type: EDIT_USER_SUCCESSFUL,
+        user
+    }
+}
+
+export function editUserFailed(error: string):editUserFailedAction{
+    return {
+        type: EDIT_USER_FAILED,
+        error
+    }
+}
+
 export function login(formBody: {email: string, password:string}):any{
     return (dispatch: Dispatch<AppActions>, getState: () => RootStateType) => {
         dispatch(startLogin());
@@ -142,6 +169,7 @@ export function login(formBody: {email: string, password:string}):any{
         }).then(response => {
             if (response.data.success){
                 localStorage.setItem('token', response.data.data.token);
+                setAuthToken(response.data.data.token);
                 dispatch(loginSuccess(response.data.data.user));
                 return;
             } else {
@@ -168,6 +196,7 @@ export function signup(formBody: {name: string, email:string, password: string, 
         }).then(response => {
             if (response.data.success){
                 localStorage.setItem('token', response.data.data.token);
+                setAuthToken(response.data.data.token);
                 dispatch(signupSuccess(response.data.data.user));
                 return;
             } else {
@@ -175,6 +204,39 @@ export function signup(formBody: {name: string, email:string, password: string, 
             }
         }).catch(err => {
             dispatch(signupFailed(err.response.data.message));
+        });
+    }
+}
+
+export function editUser(formBody: {name: string, userId:string, password: string, confirm_password:string}):any{
+    return (dispatch: Dispatch<AppActions>, getState: () => RootStateType) => {
+        const url = APIUrls.editProfile();
+        if (formBody.password !== formBody.confirm_password){
+            dispatch(editUserFailed("Passwords don't match"));
+            return;
+        }
+        const {userId, ...restBody} = formBody;
+        axios.post(url, getFormBody({
+            ...restBody,
+            id: userId
+        }), {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then(response => {
+            if (response.data.success){
+                dispatch(editUserSuccessful(response.data.data.user));
+                alert('Edit user successful');
+            }
+            if (response.data.data.token){
+                localStorage.setItem('token', response.data.data.token);
+                setAuthToken(response.data.data.token);
+            }
+            if (!response.data.success) {
+                dispatch(editUserFailed(response.data.message));
+            }
+        }).catch(err => {
+            dispatch(editUserFailed(err.response.data.message));
         });
     }
 }

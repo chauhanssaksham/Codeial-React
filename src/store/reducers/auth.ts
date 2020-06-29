@@ -1,5 +1,5 @@
 import { AuthStateType} from '../../types'
-import { AuthActionTypes, LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILED, SIGNUP_START, SIGNUP_SUCCESS, SIGNUP_FAILED, AUTHENTICATE_USER, LOG_OUT, CLEAR_AUTH_ERRORS, SET_USER_LOADING } from '../actions/auth'
+import { AuthActionTypes, LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILED, SIGNUP_START, SIGNUP_SUCCESS, SIGNUP_FAILED, AUTHENTICATE_USER, LOG_OUT, CLEAR_AUTH_ERRORS, SET_USER_LOADING, EDIT_USER_SUCCESSFUL, EDIT_USER_FAILED } from '../actions/auth'
 
 const initialAuthState:AuthStateType = {
     user: null,
@@ -61,6 +61,17 @@ function auth(state = initialAuthState, action: AuthActionTypes):AuthStateType{
             return {
                 ...state,
                 user_loading:true
+            }
+        case EDIT_USER_SUCCESSFUL:
+            return {
+                ...state,
+                user: action.user,
+                error: null
+            }
+        case EDIT_USER_FAILED:
+            return {
+                ...state,
+                error: action.error
             }
         default:
             return state;

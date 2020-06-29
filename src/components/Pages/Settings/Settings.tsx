@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { RootStateType, AuthStateType } from '../../../types';
+import {editUser, clearAuthErrors} from '../../../store/actions/auth'
 
 interface OwnState{
     name: string,
@@ -23,7 +24,8 @@ interface StateProps{
 }
 
 interface DispatchProps{
-
+    editUser: (formBody: {name: string, userId:string, password: string, confirm_password:string}) => void,
+    clearAuthErrors: () => void
 }
 
 interface OwnProps{
@@ -38,6 +40,10 @@ class Settings extends Component<Props, OwnState>{
         this.state = initialState;
     }
 
+    componentWillUnmount(){
+        this.props.clearAuthErrors();
+    }
+
     handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
@@ -48,12 +54,28 @@ class Settings extends Component<Props, OwnState>{
     toggleEditMode = () => {
         this.setState(prevState => ({
             ...prevState,
+            password: '',
+            confirm_password: '',
             editMode: !prevState.editMode
         }))
     }
 
+    handleSave = () => {
+        const {password, confirm_password, name} = this.state;
+        const id = this.props.auth.user?._id as string;
+
+        if (name && password && confirm_password && id){
+            this.props.editUser({
+                password,
+                confirm_password,
+                userId: id,
+                name
+            });
+        }
+    }
+
     render(){
-        const {user} = this.props.auth;
+        const {user, error} = this.props.auth;
         const {editMode} = this.state;
 
         return (
@@ -65,6 +87,9 @@ class Settings extends Component<Props, OwnState>{
                         id="user-dp"
                     />
                 </div>
+                {error && <div className="error-dailog alert">
+                    {error} 
+                 </div>}
                 <div className="field">
                     <div className="field-label">Email: {user?.email}</div>
                     
@@ -89,6 +114,7 @@ class Settings extends Component<Props, OwnState>{
                             type="password"
                             onChange={this.handleInputChange}
                             name='password'
+                            value={this.state.password}
                         />
                     </div>
                     <div className="field">
@@ -97,13 +123,14 @@ class Settings extends Component<Props, OwnState>{
                             type="password"
                             onChange={this.handleInputChange}
                             name='confirm_password'
+                            value={this.state.confirm_password}
                         />
                     </div>
                 </>
                 }
                 <div className="btn-grp">
                     {editMode? 
-                        <button className="button save-btn">Save</button>:
+                        <button className="button save-btn" onClick={this.handleSave}>Save</button>:
                         <button className="button edit-btn" onClick={this.toggleEditMode}>Edit Profile</button>
                     }
                     {editMode && 
@@ -123,5 +150,9 @@ const mapStateToProps = (state: RootStateType) => {
         auth: state.auth
     }
 }
+const mapDispatchToProps: DispatchProps = {
+    editUser,
+    clearAuthErrors
+}
 
-export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps)(Settings)
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Settings)

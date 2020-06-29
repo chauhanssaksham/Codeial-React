@@ -12,6 +12,7 @@ import jwtDecode from 'jwt-decode';
 import {authenticateUser} from './store/actions/auth'
 import PrivateRoute from './components/routing/PrivateRoute';
 import Settings from './components/Pages/Settings/Settings';
+import setAuthToken from './helpers/setAuthTokenAxiosHeader';
 
 interface OwnState{
 
@@ -45,6 +46,7 @@ class App extends Component<Props, OwnState>{
                 name: user.name,
                 email: user.email
             });
+            setAuthToken(localStorage.token);
         }
     }
 
