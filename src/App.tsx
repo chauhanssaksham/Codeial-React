@@ -13,6 +13,7 @@ import {authenticateUser} from './store/actions/auth'
 import PrivateRoute from './components/routing/PrivateRoute';
 import Settings from './components/Pages/Settings/Settings';
 import setAuthToken from './helpers/setAuthTokenAxiosHeader';
+import Profile from './components/Pages/Profile/Profile';
 
 interface OwnState{
 
@@ -63,6 +64,7 @@ class App extends Component<Props, OwnState>{
                 <Route path='/signup' component={Signup} />
                 <Route path='/login' component={Login} />
                 <PrivateRoute path='/settings' component={Settings} isLoggedIn={this.props.auth.isLoggedIn} loading={this.props.auth.user_loading} />
+                <PrivateRoute path='/users/:userID' component={Profile} isLoggedIn={this.props.auth.isLoggedIn} loading={this.props.auth.user_loading} />
                 <Route component={Page404} />
             </Switch>
         </Router>
