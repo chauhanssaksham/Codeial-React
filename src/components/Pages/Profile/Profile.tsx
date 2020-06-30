@@ -40,7 +40,7 @@ class Profile extends Component<Props, OwnState>{
     checkIfUserIsFriend():boolean{
         const currentProfileId = this.props.match.params.userID;
         const {friends} = this.props;
-        return (friends.some(friend => friend.to_user._id === currentProfileId));
+        return (friends.some(friend => friend._id === currentProfileId));
     }
     
     render(){

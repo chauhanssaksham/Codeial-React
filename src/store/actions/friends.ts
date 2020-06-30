@@ -28,11 +28,8 @@ export function fetchUserFriends(){
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then(response => {
-            const toSendToReducer = response.data.data.friends.map((friend: any) => ({
-                from_user: friend.from_user._id,
-                to_user: friend.to_user
-            }));
-            dispatch(fetchFriendsSuccess(response.data.data.friends));
+            const toSendToReducer = response.data.data.friends.map((friend: any) => friend.to_user);
+            dispatch(fetchFriendsSuccess(toSendToReducer));
         });
     }
 }

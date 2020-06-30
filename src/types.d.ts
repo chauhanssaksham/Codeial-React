@@ -9,10 +9,7 @@ export type UserType = {
     name: string
 }
 
-export type FriendshipType = {
-    from_user: string,
-    to_user: UserType
-}
+export type FriendshipType = UserType;
 
 export type CommentType = {
     content: string,

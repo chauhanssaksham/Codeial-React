@@ -40,7 +40,7 @@ class FriendsList extends Component<Props, OwnState> {
 
             {friends &&
                 friends.map((friend: FriendshipType) => (
-                <FriendsListItem friend={friend.to_user} key={friend.to_user._id} />
+                <FriendsListItem friend={friend} key={friend._id} />
                 ))}
             </div>
         )
