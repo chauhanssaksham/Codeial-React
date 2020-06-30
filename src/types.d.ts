@@ -8,6 +8,12 @@ export type UserType = {
     name: string
 }
 
+export type FriendshipType = {
+    _id: string
+    from_user: string,
+    to_user: UserType
+}
+
 export type CommentType = {
     content: string,
     createdAt: Date,
@@ -46,6 +52,8 @@ export type ProfileStateType = {
     inProgress: boolean,
     error: null|string
 }
+
+export type FriendsStateType = Array<FriendshipType>;
 
 export type RootStateType = {
     posts: PostsStateType,
