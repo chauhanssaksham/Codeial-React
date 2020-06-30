@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { RootStateType, ProfileStateType } from '../../../types';
+import { RootStateType, ProfileStateType, FriendsStateType } from '../../../types';
 import { RouteComponentProps } from 'react-router-dom';
 import { fetchUserProfile } from '../../../store/actions/profile';
 
@@ -9,7 +9,8 @@ interface OwnState{
 }
 
 interface StateProps{
-    profile: ProfileStateType
+    profile: ProfileStateType,
+    friends: FriendsStateType
 }
 
 interface DispatchProps{
@@ -35,12 +36,16 @@ class Profile extends Component<Props, OwnState>{
             this.props.fetchUserProfile(match.params.userID);
         }
     }
-    componentWillUnmount(){
 
+    checkIfUserIsFriend():boolean{
+        const currentProfileId = this.props.match.params.userID;
+        const {friends} = this.props;
+        return (friends.some(friend => friend.to_user._id === currentProfileId));
     }
     
     render(){
         const {inProgress, user} = this.props.profile;
+        const isUserFriend = this.checkIfUserIsFriend();
         if (inProgress){
             return <h1>Loading user...</h1>
         }
@@ -62,7 +67,11 @@ class Profile extends Component<Props, OwnState>{
                     <div className="field-value"> {user?.name}</div>
                 </div>
                 <div className="btn-grp">
-                    <button className="button save-btn">Add Friend</button>
+                    {isUserFriend? 
+                        <button className="button save-btn">Remove Friend</button>
+                        :
+                        <button className="button save-btn">Add Friend</button>
+                    }
                 </div>
 
             </div>
@@ -72,7 +81,8 @@ class Profile extends Component<Props, OwnState>{
 
 const mapStateToProps = (state: RootStateType) => {
     return {
-        profile: state.profile
+        profile: state.profile,
+        friends: state.friends
     }
 }
 const mapDispatchToProps: DispatchProps = {
