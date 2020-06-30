@@ -1,18 +1,19 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { RootStateType } from '../../../types';
+import { RootStateType, ProfileStateType } from '../../../types';
 import { RouteComponentProps } from 'react-router-dom';
+import { fetchUserProfile } from '../../../store/actions/profile';
 
 interface OwnState{
 
 }
 
 interface StateProps{
-
+    profile: ProfileStateType
 }
 
 interface DispatchProps{
-    
+    fetchUserProfile: (userId: string) => void,
 }
 
 interface HomeRouterProps {
@@ -31,10 +32,18 @@ class Profile extends Component<Props, OwnState>{
 
         if (match.params.userID){
             //Fetch the user by dispatching action
+            this.props.fetchUserProfile(match.params.userID);
         }
+    }
+    componentWillUnmount(){
+
     }
     
     render(){
+        const {inProgress, user} = this.props.profile;
+        if (inProgress){
+            return <h1>Loading user...</h1>
+        }
         return (
             <div className="settings">
                 <div className="img-container">
@@ -46,11 +55,11 @@ class Profile extends Component<Props, OwnState>{
                 </div>
                 <div className="field">
                     <div className="field-label">Email: </div>
-                    <div className="field-value">Some Email</div>
+                    <div className="field-value">{user?.email}</div>
                 </div>
                 <div className="field">
                     <div className="field-label">Name: </div>
-                    <div className="field-value">Some Name</div>
+                    <div className="field-value"> {user?.name}</div>
                 </div>
                 <div className="btn-grp">
                     <button className="button save-btn">Add Friend</button>
@@ -63,11 +72,11 @@ class Profile extends Component<Props, OwnState>{
 
 const mapStateToProps = (state: RootStateType) => {
     return {
-        
+        profile: state.profile
     }
 }
 const mapDispatchToProps: DispatchProps = {
-
+    fetchUserProfile
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Profile)

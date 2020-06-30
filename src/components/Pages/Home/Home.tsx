@@ -12,10 +12,6 @@ interface State{
 }
 
 class Home extends Component<Props, State>{
-    constructor(props:Props){
-        super(props);
-
-    }
 
     render(){
         const {posts} = this.props;
