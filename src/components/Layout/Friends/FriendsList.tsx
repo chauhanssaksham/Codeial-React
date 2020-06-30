@@ -1,47 +1,35 @@
 import React, { Component } from 'react'
-import { FriendsStateType, FriendshipType } from '../../../types';
+import { FriendsStateType, FriendshipType, RootStateType } from '../../../types';
 import FriendsListItem from './FriendsListItem';
+import {fetchUserFriends} from '../../../store/actions/friends'
+import { connect } from 'react-redux';
 
-//TODO: REMOVE THIS
-const friends: FriendsStateType = [
-    {
-        "_id": "5efb79756f2c9a4fb532e50d",
-        "from_user": "5eedd9d66f2c9a4fb532e463",
-        "to_user": {
-            "_id": "5eeb61c76f2c9a4fb532e449",
-            "email": "nilanknikhil@gmail.com",
-            "name": "Nilank Nikhil"
-        }
-    },
-    {
-        "_id": "5efb79d36f2c9a4fb532e50e",
-        "from_user": "5eedd9d66f2c9a4fb532e463",
-        "to_user": {
-            "_id": "5ef0d56a6f2c9a4fb532e46c",
-            "email": "abhi.jrt12@gmail.com",
-            "name": "Abhay Jirati"
-        }
-    },
-    {
-        "_id": "5efb79e16f2c9a4fb532e50f",
-        "from_user": "5eedd9d66f2c9a4fb532e463",
-        "to_user": {
-            "_id": "5ee3310a6f2c9a4fb532e3e3",
-            "email": "dhanuufc.dk@gmail.com",
-            "name": "Dhanu"
-        }
+interface OwnState{
+
+}
+
+interface StateProps{
+    friends: FriendsStateType
+}
+
+interface DispatchProps{
+    fetchUserFriends: () => void
+}
+
+interface OwnProps{
+
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
+
+class FriendsList extends Component<Props, OwnState> {
+
+    componentDidMount(){
+        this.props.fetchUserFriends();
     }
-];
-interface Props {
 
-}
-interface State {
-    
-}
-
-class FriendsList extends Component<Props, State> {
     render() {
-        
+        const {friends} = this.props;
         return (
             <div className="friends-list">
             <div className="header">Friends</div>
@@ -59,4 +47,14 @@ class FriendsList extends Component<Props, State> {
     }
 }
 
-export default FriendsList;
+const mapStateToProps = (state: RootStateType):StateProps => {
+    return {
+        friends: state.friends
+    }
+}
+
+const mapDispatchToProps:DispatchProps = {
+    fetchUserFriends
+}
+
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(FriendsList);

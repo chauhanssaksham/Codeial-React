@@ -1,6 +1,7 @@
 import { PostsActionType } from "./store/actions/posts";
 import { AuthActionTypes } from "./store/actions/auth";
 import { ProfileActionTypes } from "./store/actions/profile";
+import { FriendsActionTypes } from "./store/actions/friends";
 
 export type UserType = {
     _id: string,
@@ -58,7 +59,8 @@ export type FriendsStateType = Array<FriendshipType>;
 export type RootStateType = {
     posts: PostsStateType,
     auth: AuthStateType,
-    profile: ProfileStateType
+    profile: ProfileStateType,
+    friends: FriendsStateType
 }
 
-export type AppActions = PostsActionType | AuthActionTypes | ProfileActionTypes;
+export type AppActions = PostsActionType | AuthActionTypes | ProfileActionTypes | FriendsActionTypes;
