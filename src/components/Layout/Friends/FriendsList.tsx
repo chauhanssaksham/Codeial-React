@@ -13,7 +13,7 @@ interface StateProps{
 }
 
 interface DispatchProps{
-    fetchUserFriends: () => void
+
 }
 
 interface OwnProps{
@@ -23,10 +23,6 @@ interface OwnProps{
 type Props = StateProps & DispatchProps & OwnProps;
 
 class FriendsList extends Component<Props, OwnState> {
-
-    componentDidMount(){
-        this.props.fetchUserFriends();
-    }
 
     render() {
         const {friends} = this.props;
@@ -54,7 +50,7 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 }
 
 const mapDispatchToProps:DispatchProps = {
-    fetchUserFriends
+    
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(FriendsList);

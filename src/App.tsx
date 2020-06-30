@@ -14,6 +14,7 @@ import PrivateRoute from './components/routing/PrivateRoute';
 import Settings from './components/Pages/Settings/Settings';
 import setAuthToken from './helpers/setAuthTokenAxiosHeader';
 import Profile from './components/Pages/Profile/Profile';
+import { fetchUserFriends } from './store/actions/friends';
 
 interface OwnState{
 
@@ -26,7 +27,8 @@ interface StateProps{
 
 interface DispatchProps{
     fetchPosts: () => void,
-    authenticateUser: (user: UserType) => void
+    authenticateUser: (user: UserType) => void,
+    fetchUserFriends: () => void
 }
 
 interface OwnProps{
@@ -48,6 +50,7 @@ class App extends Component<Props, OwnState>{
                 email: user.email
             });
             setAuthToken(localStorage.token);
+            this.props.fetchUserFriends();
         }
     }
 
@@ -81,7 +84,8 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 
 const mapDispatchToProps:DispatchProps = {
     fetchPosts,
-    authenticateUser
+    authenticateUser,
+    fetchUserFriends
 }
 
 
