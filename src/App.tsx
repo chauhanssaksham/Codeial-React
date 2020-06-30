@@ -59,7 +59,7 @@ class App extends Component<Props, OwnState>{
             <Navbar />
             <Switch>
                 <Route exact path='/' render={(props)=>{
-                    return <Home {...props} posts={posts} />
+                    return <Home {...props} isLoggedIn={this.props.auth.isLoggedIn} posts={posts} />
                 }} />
                 <Route path='/signup' component={Signup} />
                 <Route path='/login' component={Login} />
