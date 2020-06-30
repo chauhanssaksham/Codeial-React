@@ -1,11 +1,15 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import { RootStateType, ProfileStateType, FriendsStateType } from '../../../types';
+import { RootStateType, ProfileStateType, FriendsStateType, FriendshipType } from '../../../types';
 import { RouteComponentProps } from 'react-router-dom';
 import { fetchUserProfile } from '../../../store/actions/profile';
+import { APIUrls } from '../../../helpers/URLs';
+import Axios from 'axios';
+import { addFriend } from '../../../store/actions/friends';
 
 interface OwnState{
-
+    success: null | boolean,
+    error: null | string
 }
 
 interface StateProps{
@@ -15,6 +19,7 @@ interface StateProps{
 
 interface DispatchProps{
     fetchUserProfile: (userId: string) => void,
+    addFriend: (friend: FriendshipType) => void
 }
 
 interface HomeRouterProps {
@@ -28,6 +33,15 @@ interface OwnProps extends RouteComponentProps<HomeRouterProps>{
 type Props = StateProps & DispatchProps & OwnProps;
 
 class Profile extends Component<Props, OwnState>{
+
+    constructor(props: Props){
+        super(props);
+        this.state = {
+            success: null,
+            error: null
+        }
+    }
+
     componentDidMount() {
         const {match} = this.props;
 
@@ -35,6 +49,36 @@ class Profile extends Component<Props, OwnState>{
             //Fetch the user by dispatching action
             this.props.fetchUserProfile(match.params.userID);
         }
+    }
+
+    handleAddFriendClick = async () => {
+        try {
+            const {userID} = this.props.match.params;
+            const url = APIUrls.addFriend(userID);
+            const res = await Axios.post(url, {}, {
+                headers: {
+                    'Content-Type':'application/x-www-form-urlencoded'
+                }
+            });
+            if (res.data.success){
+                this.setState({
+                    success: true
+                });
+                this.props.addFriend(res.data.data.friendship.to_user);
+                
+            } else {
+                this.setState({
+                    success: false,
+                    error: res.data.message
+                });
+            }
+        } catch (error) {
+            this.setState({
+                success: false,
+                error: error.response.data.message
+            });
+        }
+
     }
 
     checkIfUserIsFriend():boolean{
@@ -70,10 +114,11 @@ class Profile extends Component<Props, OwnState>{
                     {isUserFriend? 
                         <button className="button save-btn">Remove Friend</button>
                         :
-                        <button className="button save-btn">Add Friend</button>
+                        <button className="button save-btn" onClick={this.handleAddFriendClick}>Add Friend</button>
                     }
+                    {this.state.success && <div className="alert success-dailog">User added as a friend!</div>}
+                    {this.state.error && <div className="alert error-dailog">{this.state.error}</div>}
                 </div>
-
             </div>
         );
     }
@@ -86,7 +131,8 @@ const mapStateToProps = (state: RootStateType) => {
     }
 }
 const mapDispatchToProps: DispatchProps = {
-    fetchUserProfile
+    fetchUserProfile,
+    addFriend
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Profile)

@@ -56,7 +56,6 @@ export function fetchUserProfile(userId: string){
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then(response => {
-            console.log(response.data);
             if (response.data.success){
                 dispatch(userProfileSuccessAction(response.data.data.user));
             } else {
