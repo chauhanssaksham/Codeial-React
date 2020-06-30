@@ -10,7 +10,6 @@ export type UserType = {
 }
 
 export type FriendshipType = {
-    _id: string
     from_user: string,
     to_user: UserType
 }
