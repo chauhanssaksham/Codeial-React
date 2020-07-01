@@ -1,5 +1,5 @@
 import { FriendsStateType } from "../../types";
-import { FriendsActionTypes, FETCH_FRIENDS_SUCCESS, ADD_FRIEND } from "../actions/friends";
+import { FriendsActionTypes, FETCH_FRIENDS_SUCCESS, ADD_FRIEND, REMOVE_FRIEND } from "../actions/friends";
 
 const initialAuthState:FriendsStateType = [];
 
@@ -8,7 +8,9 @@ function friends(state = initialAuthState, action: FriendsActionTypes):FriendsSt
         case FETCH_FRIENDS_SUCCESS:
             return [...action.friends];
         case ADD_FRIEND:
-            return [...state, action.friend]
+            return [...state, action.friend];
+        case REMOVE_FRIEND:
+            return state.filter(friend => friend._id !== action.id);
         default:
             return state;
     }

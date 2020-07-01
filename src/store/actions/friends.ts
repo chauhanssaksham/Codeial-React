@@ -1,4 +1,4 @@
-import { FriendsStateType, AppActions, RootStateType, FriendshipType, UserType } from "../../types";
+import { FriendsStateType, AppActions, RootStateType, FriendshipType } from "../../types";
 import { AnyAction, Dispatch } from "redux";
 import { APIUrls } from "../../helpers/URLs";
 import axios from 'axios'
@@ -7,6 +7,8 @@ export const FETCH_FRIENDS_SUCCESS = 'FETCH_FRIENDS_SUCCESS';
 export type FETCH_FRIENDS_SUCCESS = typeof FETCH_FRIENDS_SUCCESS;
 export const ADD_FRIEND = 'ADD_FRIEND';
 export type ADD_FRIEND = typeof ADD_FRIEND;
+export const REMOVE_FRIEND = 'REMOVE_FRIEND';
+export type REMOVE_FRIEND = typeof REMOVE_FRIEND;
 
 export interface fetchFriendsSuccessAction extends AnyAction {
     type: FETCH_FRIENDS_SUCCESS,
@@ -18,7 +20,12 @@ export interface addFriendAction extends AnyAction {
     friend: FriendshipType
 }
 
-export type FriendsActionTypes = fetchFriendsSuccessAction | addFriendAction; 
+export interface removeFriendAction extends AnyAction {
+    type: REMOVE_FRIEND,
+    id: string
+}
+
+export type FriendsActionTypes = fetchFriendsSuccessAction | addFriendAction | removeFriendAction; 
 
 export function fetchFriendsSuccess(friends: FriendsStateType):fetchFriendsSuccessAction{
     return {
@@ -31,6 +38,13 @@ export function addFriend(friend: FriendshipType):addFriendAction{
     return {
         type: ADD_FRIEND,
         friend
+    }
+}
+
+export function removeFriend(id: string):removeFriendAction{
+    return {
+        type: REMOVE_FRIEND,
+        id 
     }
 }
 

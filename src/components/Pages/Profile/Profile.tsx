@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { fetchUserProfile } from '../../../store/actions/profile';
 import { APIUrls } from '../../../helpers/URLs';
 import Axios from 'axios';
-import { addFriend } from '../../../store/actions/friends';
+import { addFriend, removeFriend } from '../../../store/actions/friends';
 
 interface OwnState{
     success: null | boolean,
@@ -19,7 +19,8 @@ interface StateProps{
 
 interface DispatchProps{
     fetchUserProfile: (userId: string) => void,
-    addFriend: (friend: FriendshipType) => void
+    addFriend: (friend: FriendshipType) => void,
+    removeFriend: (id: string) => void
 }
 
 interface HomeRouterProps {
@@ -78,7 +79,33 @@ class Profile extends Component<Props, OwnState>{
                 error: error.response.data.message
             });
         }
-
+    }
+    handleRemoveFriendClick = async () => {
+        try {
+            const {userID} = this.props.match.params;
+            const url = APIUrls.removeFriend(userID);
+            const res = await Axios.post(url, {}, {
+                headers: {
+                    'Content-Type':'application/x-www-form-urlencoded'
+                }
+            });
+            if (res.data.success){
+                this.setState({
+                    success: true
+                });
+                this.props.removeFriend(userID);
+            } else {
+                this.setState({
+                    success: false,
+                    error: res.data.message
+                });
+            }
+        } catch (error) {
+            this.setState({
+                success: false,
+                error: error.response.data.message
+            });
+        }
     }
 
     checkIfUserIsFriend():boolean{
@@ -112,7 +139,7 @@ class Profile extends Component<Props, OwnState>{
                 </div>
                 <div className="btn-grp">
                     {isUserFriend? 
-                        <button className="button save-btn">Remove Friend</button>
+                        <button className="button save-btn" onClick={this.handleRemoveFriendClick}>Remove Friend</button>
                         :
                         <button className="button save-btn" onClick={this.handleAddFriendClick}>Add Friend</button>
                     }
@@ -132,7 +159,8 @@ const mapStateToProps = (state: RootStateType) => {
 }
 const mapDispatchToProps: DispatchProps = {
     fetchUserProfile,
-    addFriend
+    addFriend,
+    removeFriend
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(Profile)

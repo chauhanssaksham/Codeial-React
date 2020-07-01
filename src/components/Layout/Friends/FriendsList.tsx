@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { FriendsStateType, FriendshipType, RootStateType } from '../../../types';
 import FriendsListItem from './FriendsListItem';
-import {fetchUserFriends} from '../../../store/actions/friends'
 import { connect } from 'react-redux';
 
 interface OwnState{
@@ -50,7 +49,7 @@ const mapStateToProps = (state: RootStateType):StateProps => {
 }
 
 const mapDispatchToProps:DispatchProps = {
-    
+
 }
 
 export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(FriendsList);
