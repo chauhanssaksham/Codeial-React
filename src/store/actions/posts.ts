@@ -2,15 +2,17 @@ import { PostType, AppActions, RootStateType } from "../../types.d";
 import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { APIUrls } from "../../helpers/URLs";
+import Axios from "axios";
+import { getFormBody } from "../../helpers/utils";
 
-export const ADD_POSTS = 'ADD_POSTS';
-export type ADD_POSTS = typeof ADD_POSTS;
+export const ADD_POST = 'ADD_POST';
+export type ADD_POST = typeof ADD_POST;
 export const UPDATE_POSTS = 'UPDATE_POSTS';
 export type UPDATE_POSTS = typeof UPDATE_POSTS;
 
-export interface addPostsAction extends AnyAction{
-    type: ADD_POSTS,
-    posts: PostType[]
+export interface addPostAction extends AnyAction{
+    type: ADD_POST,
+    post: PostType
 }
 
 export interface updatePostsAction extends AnyAction{
@@ -18,12 +20,12 @@ export interface updatePostsAction extends AnyAction{
     posts: PostType[]
 }
 
-export type PostsActionType = addPostsAction | updatePostsAction;
+export type PostsActionType = addPostAction | updatePostsAction;
 
-export const addPosts = (posts:PostType[]):PostsActionType => {
+export const addPost = (post:PostType):PostsActionType => {
     return {
-        type: ADD_POSTS,
-        posts
+        type: ADD_POST,
+        post
     }
 }
 
@@ -31,6 +33,24 @@ export const updatePosts = (posts:PostType[]):PostsActionType => {
     return {
         type: UPDATE_POSTS,
         posts
+    }
+}
+
+export const createPost = (content:string):any => {
+    return (dispatch:Dispatch<AppActions>, getState: () => RootStateType ) => {
+        const url = APIUrls.createPost();
+
+        Axios.post(url, getFormBody({content}), {
+            headers: {
+                'Content-Type':'application/x-www-form-urlencoded'
+            }
+        }).then(response => {
+            if(response.data.success){
+                dispatch(addPost(response.data.data.post));
+            }
+        }).catch(err => {
+
+        });
     }
 }
 

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import { RootStateType } from '../../../types';
+import { createPost } from '../../../store/actions/posts';
 
 interface OwnState{
     content: string
@@ -11,7 +12,7 @@ interface StateProps{
 }
 
 interface DispatchProps{
-
+    createPost: (content: string) => void
 }
 
 interface OwnProps{
@@ -20,12 +21,14 @@ interface OwnProps{
 
 type Props = StateProps & DispatchProps & OwnProps;
 
+const initialState:OwnState = {
+    content: ''
+}
+
 class CreatePost extends Component<Props, OwnState>{
     constructor(props:Props){
         super(props);
-        this.state = {
-            content: ''
-        }
+        this.state = initialState;
     }
     handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         this.setState({
@@ -34,7 +37,8 @@ class CreatePost extends Component<Props, OwnState>{
         });
     }
     handleOnClick = () => {
-        //TODO: ADD ACTION DISPATCH
+        this.props.createPost(this.state.content);
+        this.setState(initialState);
     }
 
     render(){
@@ -58,4 +62,9 @@ const mapStateToProps = (state: RootStateType) => {
     }
 }
 
-export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps)(CreatePost)
+const mapDispatchToProps:DispatchProps = {
+    createPost
+}
+
+
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(CreatePost)
