@@ -1,4 +1,4 @@
-import { PostType, AppActions, RootStateType } from "../../types.d";
+import { PostType, AppActions, RootStateType, CommentType } from "../../types.d";
 import { Dispatch } from "react";
 import { AnyAction } from "redux";
 import { APIUrls } from "../../helpers/URLs";
@@ -46,10 +46,22 @@ export const createPost = (content:string):any => {
             }
         }).then(response => {
             if(response.data.success){
-                dispatch(addPost(response.data.data.post));
+                const post = response.data.data.post;
+                const postToSendToReducer:PostType = {
+                    ...post,
+                    createdAt: new Date(post.createdAt),
+                    updatedAt: new Date(post.updatedAt),
+                    comments: post.comments.map((comment:CommentType) => ({
+                        ...comment, 
+                        createdAt: new Date(comment.createdAt),
+                        updatedAt: new Date(comment.updatedAt),
+                    }))
+                };
+                dispatch(addPost(postToSendToReducer));
             }
+            //TODO: ADD ERROR HANDLING
         }).catch(err => {
-
+            //todo: ADD ERROR HANDLING
         });
     }
 }
@@ -62,7 +74,18 @@ export const fetchPosts = ():any => {
                 // console.log('response');
                 return response.json();
             }).then(data => {
-                dispatch(updatePosts(data.data.posts));
+                const postsToSendToReducer:PostType[] = data.data.posts.map((post:PostType) => ({
+                    ...post,
+                    createdAt: new Date(post.createdAt),
+                    updatedAt: new Date(post.updatedAt),
+                    comments: post.comments.map(comment => ({
+                        ...comment, 
+                        createdAt: new Date(comment.createdAt),
+                        updatedAt: new Date(comment.updatedAt),
+                    }))
+                }));
+                console.log(postsToSendToReducer);
+                dispatch(updatePosts(postsToSendToReducer));
             })
     }
 }

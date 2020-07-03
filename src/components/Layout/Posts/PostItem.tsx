@@ -52,7 +52,7 @@ class PostItem extends Component<Props, State> {
                     </Link>
                     <div>
                     <span className="post-author">{post.user.name}</span>
-                    <span className="post-time">a minute ago</span>
+                    <span className="post-time">{post.createdAt.toLocaleString()}</span>
                     </div>
                 </div>
                 <div className="post-content">{post.content}</div>

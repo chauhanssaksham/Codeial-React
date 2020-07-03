@@ -28,7 +28,7 @@ class Comment extends Component<Props, OwnState>{
             <div className="post-comment-item">
             <div className="post-comment-header">
               <span className="post-comment-author">{comment.user.name}</span>
-            <span className="post-comment-time">{new Date(comment.createdAt).toLocaleString()}</span>
+            <span className="post-comment-time">{comment.createdAt.toLocaleString()}</span>
               <span className="post-comment-likes">{comment.likes.length} likes</span>
             </div>
       
