@@ -9,6 +9,18 @@ export type UserType = {
     name: string
 }
 
+type LikeType = any;
+
+export type CommentType = {
+    user: UserType,
+    likes: Like[],
+    content:string,
+    __v: number,
+    _id: string,
+    createdAt: Date,
+    updatedAt: Date,
+}
+
 export type FriendshipType = UserType;
 
 export type CommentType = {
@@ -16,10 +28,11 @@ export type CommentType = {
     createdAt: Date,
     updatedAt: Date,
     post: string,
-    likes: any[],
+    likes: LikeType[],
     __v: number,
     _id: string,
-    user: UserType
+    user: UserType,
+    comments?: CommentType[]
 }
 
 export type PostType = {
