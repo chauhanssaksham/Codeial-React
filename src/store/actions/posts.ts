@@ -9,6 +9,8 @@ export const ADD_POST = 'ADD_POST';
 export type ADD_POST = typeof ADD_POST;
 export const UPDATE_POSTS = 'UPDATE_POSTS';
 export type UPDATE_POSTS = typeof UPDATE_POSTS;
+export const ADD_COMMENT = 'ADD_COMMENT';
+export type ADD_COMMENT = typeof ADD_COMMENT;
 
 export interface addPostAction extends AnyAction{
     type: ADD_POST,
@@ -20,7 +22,13 @@ export interface updatePostsAction extends AnyAction{
     posts: PostType[]
 }
 
-export type PostsActionType = addPostAction | updatePostsAction;
+export interface addCommentAction extends AnyAction{
+    type: ADD_COMMENT,
+    comment: CommentType,
+    postId: string
+}
+
+export type PostsActionType = addPostAction | updatePostsAction | addCommentAction;
 
 export const addPost = (post:PostType):PostsActionType => {
     return {
@@ -35,6 +43,15 @@ export const updatePosts = (posts:PostType[]):PostsActionType => {
         posts
     }
 }
+
+export const addComment = (comment:CommentType, postId: string):PostsActionType => {
+    return {
+        type: ADD_COMMENT,
+        comment,
+        postId
+    }
+}
+
 
 export const createPost = (content:string):any => {
     return (dispatch:Dispatch<AppActions>, getState: () => RootStateType ) => {
@@ -87,5 +104,32 @@ export const fetchPosts = ():any => {
                 console.log(postsToSendToReducer);
                 dispatch(updatePosts(postsToSendToReducer));
             })
+    }
+}
+
+export const createComment = (content:string, postId: string):any => {
+    return (dispatch:Dispatch<AppActions>, getState: () => RootStateType ) => {
+        const url = APIUrls.createComment();
+
+        Axios.post(url, getFormBody({content, post_id: postId}), {
+            headers: {
+                'Content-Type':'application/x-www-form-urlencoded'
+            }
+        }).then(response => {
+            if(response.data.success){
+                console.log("DATA: ", response.data);
+                const comment = response.data.data.comment;
+                const commentToSendToReducer:CommentType = {
+                    ...comment,
+                    createdAt: new Date(comment.createdAt),
+                    updatedAt: new Date(comment.updatedAt)
+                };
+                console.log(commentToSendToReducer);
+                dispatch(addComment(commentToSendToReducer, commentToSendToReducer.post));
+            }
+            //TODO: ADD ERROR HANDLING
+        }).catch(err => {
+            //todo: ADD ERROR HANDLING
+        });
     }
 }

@@ -19,6 +19,7 @@ export type CommentType = {
     _id: string,
     createdAt: Date,
     updatedAt: Date,
+    post: string
 }
 
 export type FriendshipType = UserType;

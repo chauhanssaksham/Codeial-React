@@ -1,19 +1,31 @@
 import React, { Component } from 'react'
-import { PostType } from '../../../types';
+import { PostType, RootStateType } from '../../../types';
 import { Link } from 'react-router-dom';
 import Comment from './Comment';
+import { createComment } from '../../../store/actions/posts';
+import { connect } from 'react-redux';
 
-interface Props {
-    post: PostType
-}
-interface State {
+interface OwnState {
     comment: string
 }
-const initialState: State = {
+interface StateProps{
+
+}
+interface DispatchProps{
+    createComment: (content: string, postId: string) => void
+}
+interface OwnProps {
+    post: PostType
+}
+
+type Props = StateProps & DispatchProps & OwnProps;
+
+
+const initialState: OwnState = {
     comment:''
 }
 
-class PostItem extends Component<Props, State> {
+class PostItem extends Component<Props, OwnState> {
     constructor(props: Props){
         super(props);
         this.state = initialState;
@@ -25,12 +37,11 @@ class PostItem extends Component<Props, State> {
         });
     }
     handleAddComment = (e:React.KeyboardEvent<HTMLInputElement>) => {
-        // const { comment } = this.state;
-        // const { post } = this.props;
+        const { comment } = this.state;
+        const { post } = this.props;
     
         if (e.key === 'Enter') {
-        //TODO:   this.props.dispatch(createComment(comment, post._id));
-          console.log('add:', this.state.comment);
+          this.props.createComment(comment, post._id);
           // clear comment
           this.setState({
             comment: '',
@@ -95,4 +106,16 @@ class PostItem extends Component<Props, State> {
     }
 }
 
-export default PostItem;
+
+const mapStateToProps = (state: RootStateType) => {
+    return {
+        
+    }
+}
+
+const mapDispatchToProps:DispatchProps = {
+    createComment
+}
+
+
+export default connect<StateProps, DispatchProps, OwnProps, RootStateType>(mapStateToProps, mapDispatchToProps)(PostItem)
