@@ -30,7 +30,6 @@ export function searchUsers(searchString: string){
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         }).then(response => {
-            console.log('SEARCH DATA:', response.data);
             if (response.data.success){
                 dispatch(searchResultsSucces(response.data.data.users));
             } else {

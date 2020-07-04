@@ -52,6 +52,14 @@ class Profile extends Component<Props, OwnState>{
         }
     }
 
+    componentDidUpdate(prevProps: Props){
+        const prevParams =  prevProps.match.params;
+        const params = this.props.match.params;
+        if (prevParams && params && prevParams.userID !== params.userID){
+            this.props.fetchUserProfile(params.userID);
+        }
+    }
+
     handleAddFriendClick = async () => {
         try {
             const {userID} = this.props.match.params;
