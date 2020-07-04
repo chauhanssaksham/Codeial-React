@@ -22,20 +22,16 @@ function posts(state = initialPostsState, action:PostsActionType):PostsStateType
         case UPDATE_POST_LIKE:
             return state.map(post => {
                 if (post._id === action.postId){
-                    if (action.deleted){
-                        return {
-                            ...post,
-                            likes: post.likes.filter(likeID => likeID !== action.userId)
-                        }
-                    } else {
-                        return {
-                            ...post,
-                            likes: [...post.likes, action.userId]
-                        }
+                    return {
+                        ...post,
+                        likes: action.deleted? 
+                                post.likes.filter(likeID => likeID !== action.userId)
+                                :
+                                [...post.likes, action.userId]
                     }
                 }
                 return post;
-            })
+            });
         case UPDATE_COMMENT_LIKE:
             return state.map(post => {
                 if (post._id === action.postId){
