@@ -11,6 +11,8 @@ export const UPDATE_POSTS = 'UPDATE_POSTS';
 export type UPDATE_POSTS = typeof UPDATE_POSTS;
 export const ADD_COMMENT = 'ADD_COMMENT';
 export type ADD_COMMENT = typeof ADD_COMMENT;
+export const UPDATE_POST_LIKE = 'UPDATE_POST_LIKE';
+export type UPDATE_POST_LIKE = typeof UPDATE_POST_LIKE;
 
 export interface addPostAction extends AnyAction{
     type: ADD_POST,
@@ -28,7 +30,14 @@ export interface addCommentAction extends AnyAction{
     postId: string
 }
 
-export type PostsActionType = addPostAction | updatePostsAction | addCommentAction;
+export interface updatePostLikeAction extends AnyAction{
+    type: UPDATE_POST_LIKE,
+    postId: string,
+    userId: string,
+    deleted: boolean
+}
+
+export type PostsActionType = addPostAction | updatePostsAction | addCommentAction | updatePostLikeAction;
 
 export const addPost = (post:PostType):PostsActionType => {
     return {
@@ -49,6 +58,15 @@ export const addComment = (comment:CommentType, postId: string):PostsActionType 
         type: ADD_COMMENT,
         comment,
         postId
+    }
+}
+
+export const updatePostLike = (postId: string, userId: string, deleted: boolean):PostsActionType => {
+    return {
+        type: UPDATE_POST_LIKE,
+        postId,
+        userId,
+        deleted
     }
 }
 
@@ -131,5 +149,25 @@ export const createComment = (content:string, postId: string):any => {
         }).catch(err => {
             //todo: ADD ERROR HANDLING
         });
+    }
+}
+
+export function addLikeToStore(id: string, likeType: 'Post' | 'Comment', userId: string){
+    return (dispatch:Dispatch<AppActions>, getState: () => RootStateType ) => {
+        const url = APIUrls.toggleLike(id, likeType);
+        Axios.post(url, {},{
+            headers:{
+                'Content-Type':'application/x-www-form-urlencoded'
+            }
+        }).then(response => {
+            console.log('Data: ', response.data);
+            if (response.data.success){
+                dispatch(updatePostLike(id, userId, response.data.data.deleted));
+            }
+            //TODO: ADD ERROR HANDLING
+        }).catch(err => {
+            //TODO: ADD ERROR HANDLING
+        });
+       
     }
 }

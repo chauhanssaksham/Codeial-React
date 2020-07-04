@@ -1,18 +1,19 @@
 import React, { Component } from 'react'
-import { PostType, RootStateType } from '../../../types';
+import { PostType, RootStateType, AuthStateType } from '../../../types';
 import { Link } from 'react-router-dom';
 import Comment from './Comment';
-import { createComment } from '../../../store/actions/posts';
+import { createComment, addLikeToStore } from '../../../store/actions/posts';
 import { connect } from 'react-redux';
 
 interface OwnState {
     comment: string
 }
 interface StateProps{
-
+    auth: AuthStateType
 }
 interface DispatchProps{
-    createComment: (content: string, postId: string) => void
+    createComment: (content: string, postId: string) => void,
+    addLikeToStore: (id: string, likeType: 'Post' | 'Comment', userId: string) => void
 }
 interface OwnProps {
     post: PostType
@@ -48,9 +49,15 @@ class PostItem extends Component<Props, OwnState> {
           });
         }
       };
+
+      handlePostLike = () => {
+        this.props.addLikeToStore(this.props.post._id, 'Post', this.props.auth.user!._id);
+      }
     
     render() {
         const {post} = this.props;
+        const isPostLikedByUser: boolean = post.likes.includes(this.props.auth.user!._id);
+
         return (
             <div className="post-wrapper" key={post._id}>
                 <div className="post-header">
@@ -70,10 +77,18 @@ class PostItem extends Component<Props, OwnState> {
 
                 <div className="post-actions">
                     <div className="post-like">
+                    {isPostLikedByUser? 
+                    <img
+                        src="https://image.flaticon.com/icons/svg/1076/1076984.svg"
+                        alt="unlike-post"
+                        onClick={this.handlePostLike}
+                    /> :
                     <img
                         src="https://image.flaticon.com/icons/svg/1077/1077035.svg"
-                        alt="likes-icon"
+                        alt="like-post"
+                        onClick={this.handlePostLike}
                     />
+                    }
                     <span>{post.likes.length}</span>
                     </div>
 
@@ -109,12 +124,13 @@ class PostItem extends Component<Props, OwnState> {
 
 const mapStateToProps = (state: RootStateType) => {
     return {
-        
+        auth: state.auth
     }
 }
 
 const mapDispatchToProps:DispatchProps = {
-    createComment
+    createComment,
+    addLikeToStore
 }
 
 
