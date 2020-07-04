@@ -13,7 +13,7 @@ interface StateProps{
 }
 interface DispatchProps{
     createComment: (content: string, postId: string) => void,
-    addLikeToStore: (id: string, likeType: 'Post' | 'Comment', userId: string) => void
+    addLikeToStore: (id: string, likeType: 'Post', userId: string) => void
 }
 interface OwnProps {
     post: PostType

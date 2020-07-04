@@ -1,5 +1,5 @@
 import { PostsStateType } from "../../types.d";
-import { PostsActionType, UPDATE_POSTS, ADD_POST, ADD_COMMENT, UPDATE_POST_LIKE } from "../actions/posts";
+import { PostsActionType, UPDATE_POSTS, ADD_POST, ADD_COMMENT, UPDATE_POST_LIKE, UPDATE_COMMENT_LIKE } from "../actions/posts";
 
 const initialPostsState: PostsStateType =  [];
 
@@ -36,6 +36,26 @@ function posts(state = initialPostsState, action:PostsActionType):PostsStateType
                 }
                 return post;
             })
+        case UPDATE_COMMENT_LIKE:
+            return state.map(post => {
+                if (post._id === action.postId){
+                    return {
+                        ...post,
+                        comments: post.comments.map(comment => {
+                            if (comment._id === action.commentId){
+                                return {
+                                    ...comment,
+                                    likes: action.deleted? 
+                                            comment.likes.filter(likeId => likeId !== action.userId):
+                                            [...comment.likes, action.userId]
+                                }
+                            }
+                            return comment;
+                        })
+                    }
+                }
+                return post;
+            });
         default:
             return state;
     }

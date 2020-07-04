@@ -13,6 +13,8 @@ export const ADD_COMMENT = 'ADD_COMMENT';
 export type ADD_COMMENT = typeof ADD_COMMENT;
 export const UPDATE_POST_LIKE = 'UPDATE_POST_LIKE';
 export type UPDATE_POST_LIKE = typeof UPDATE_POST_LIKE;
+export const UPDATE_COMMENT_LIKE = 'UPDATE_COMMENT_LIKE';
+export type UPDATE_COMMENT_LIKE = typeof UPDATE_COMMENT_LIKE;
 
 export interface addPostAction extends AnyAction{
     type: ADD_POST,
@@ -37,7 +39,15 @@ export interface updatePostLikeAction extends AnyAction{
     deleted: boolean
 }
 
-export type PostsActionType = addPostAction | updatePostsAction | addCommentAction | updatePostLikeAction;
+export interface updateCommentLikeAction extends AnyAction{
+    type: UPDATE_COMMENT_LIKE,
+    postId: string,
+    userId: string,
+    deleted: boolean,
+    commentId: string
+}
+
+export type PostsActionType = addPostAction | updatePostsAction | addCommentAction | updatePostLikeAction | updateCommentLikeAction;
 
 export const addPost = (post:PostType):PostsActionType => {
     return {
@@ -67,6 +77,16 @@ export const updatePostLike = (postId: string, userId: string, deleted: boolean)
         postId,
         userId,
         deleted
+    }
+}
+
+export const updateCommentLike = (commentId:string, postId: string, userId: string, deleted: boolean):PostsActionType => {
+    return {
+        type: UPDATE_COMMENT_LIKE,
+        postId,
+        userId,
+        deleted,
+        commentId
     }
 }
 
@@ -151,8 +171,9 @@ export const createComment = (content:string, postId: string):any => {
         });
     }
 }
-
-export function addLikeToStore(id: string, likeType: 'Post' | 'Comment', userId: string){
+export function addLikeToStore(id: string, likeType: 'Comment', userId: string, parentPostId: string):void;
+export function addLikeToStore(id: string, likeType: 'Post', userId: string):void;
+export function addLikeToStore<T extends 'Post' | 'Comment'>(id: string, likeType: T, userId: string, parentPostId?: string){
     return (dispatch:Dispatch<AppActions>, getState: () => RootStateType ) => {
         const url = APIUrls.toggleLike(id, likeType);
         Axios.post(url, {},{
@@ -162,7 +183,11 @@ export function addLikeToStore(id: string, likeType: 'Post' | 'Comment', userId:
         }).then(response => {
             console.log('Data: ', response.data);
             if (response.data.success){
-                dispatch(updatePostLike(id, userId, response.data.data.deleted));
+                if (likeType === 'Post'){
+                    dispatch(updatePostLike(id, userId, response.data.data.deleted));
+                } else {
+                    dispatch(updateCommentLike(id, parentPostId as string, userId, response.data.data.deleted));
+                }
             }
             //TODO: ADD ERROR HANDLING
         }).catch(err => {
