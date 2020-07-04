@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { RootStateType, AuthStateType } from '../../../types';
+import { RootStateType, AuthStateType, SearchStateType } from '../../../types';
 import {logout} from '../../../store/actions/auth'
+import { searchUsers } from '../../../store/actions/search';
 
 interface OwnState{
-
+    searchText: string
 }
 
 interface StateProps{
-    auth: AuthStateType
+    auth: AuthStateType,
+    search: SearchStateType
 }
 
 interface DispatchProps{
-    logout: () => void
+    logout: () => void,
+    searchUsers: (searchString: string) => void
 }
 
 interface OwnProps{
@@ -25,12 +28,27 @@ type Props = StateProps & DispatchProps & OwnProps;
 
 class Navbar extends Component<Props, OwnState> {
 
+    constructor(props: Props){
+        super(props);
+        this.state = {
+            searchText: ''
+        }
+    }
+
     logOut = () => {
         this.props.logout();
     }
 
+    handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            searchText: e.target.value
+        }, () => {
+            this.props.searchUsers(this.state.searchText);
+        });
+    }
+
     render() {
-        const {auth} = this.props;
+        const {auth, search} = this.props;
 
         return (
             <nav className="nav">
@@ -46,26 +64,24 @@ class Navbar extends Component<Props, OwnState> {
                     src="https://image.flaticon.com/icons/svg/483/483356.svg"
                     alt="search-icon"
                 />
-                <input placeholder="Search" />
-    
+                <input placeholder="Search" value={this.state.searchText} onChange={this.handleSearch} />
+                {this.state.searchText !== '' && search.results.length > 0 && 
                 <div className="search-results">
                     <ul>
-                    <li className="search-results-row">
-                        <img
-                        src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
-                        alt="user-dp"
-                        />
-                        <span>John Doe</span>
-                    </li>
-                    <li className="search-results-row">
-                        <img
-                        src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
-                        alt="user-dp"
-                        />
-                        <span>John Doe</span>
-                    </li>
+                        {search.results.map(user => (
+                            <Link to={`/users/${user._id}`} key={user._id}>
+                                <li className="search-results-row">
+                                    <img
+                                    src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
+                                    alt="user-dp"
+                                    />
+                                    <span>{user.name}</span>
+                                </li>
+                            </Link>
+                        ))}
                     </ul>
-                </div>
+                </div>}
+                
                 </div>
                 <div className="right-nav">
                 {auth.isLoggedIn && 
@@ -100,12 +116,14 @@ class Navbar extends Component<Props, OwnState> {
 
 const mapStateToProps = (state: RootStateType):StateProps => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        search: state.search
     }
 }
 
 const mapDispatchToProps:DispatchProps = {
-    logout
+    logout,
+    searchUsers
 }
 
 
