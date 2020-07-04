@@ -11,5 +11,6 @@ export const APIUrls = {
     removeFriend: (userID:string) => `${API_ROOT}/friendship/remove_friendship?user_id=${userID}`,
     createPost: () => `${API_ROOT}/posts/create`,
     createComment: () => `${API_ROOT}/comments/`,
-    toggleLike: (id: string, likeType: 'Post' | 'Comment') => `${API_ROOT}/likes/toggle?likeable_id=${id}&likeable_type=${likeType}`
+    toggleLike: (id: string, likeType: 'Post' | 'Comment') => `${API_ROOT}/likes/toggle?likeable_id=${id}&likeable_type=${likeType}`,
+    userSearch: (searchText: string) => `${API_ROOT}/users/search?text=${searchText}`
 };

@@ -2,6 +2,7 @@ import { PostsActionType } from "./store/actions/posts";
 import { AuthActionTypes } from "./store/actions/auth";
 import { ProfileActionTypes } from "./store/actions/profile";
 import { FriendsActionTypes } from "./store/actions/friends";
+import { SearchActionTypes } from "./store/actions/search";
 
 export type UserType = {
     _id: string,
@@ -66,11 +67,16 @@ export type ProfileStateType = {
 
 export type FriendsStateType = Array<FriendshipType>;
 
+export type SearchStateType = {
+    results: UserType[]
+}
+
 export type RootStateType = {
     posts: PostsStateType,
     auth: AuthStateType,
     profile: ProfileStateType,
-    friends: FriendsStateType
+    friends: FriendsStateType,
+    search: SearchStateType
 }
 
-export type AppActions = PostsActionType | AuthActionTypes | ProfileActionTypes | FriendsActionTypes;
+export type AppActions = PostsActionType | AuthActionTypes | ProfileActionTypes | FriendsActionTypes | SearchActionTypes;
