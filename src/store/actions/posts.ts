@@ -139,7 +139,7 @@ export const fetchPosts = ():any => {
                         updatedAt: new Date(comment.updatedAt),
                     }))
                 }));
-                console.log(postsToSendToReducer);
+                // console.log(postsToSendToReducer);
                 dispatch(updatePosts(postsToSendToReducer));
             })
     }
@@ -155,14 +155,14 @@ export const createComment = (content:string, postId: string):any => {
             }
         }).then(response => {
             if(response.data.success){
-                console.log("DATA: ", response.data);
+                // console.log("DATA: ", response.data);
                 const comment = response.data.data.comment;
                 const commentToSendToReducer:CommentType = {
                     ...comment,
                     createdAt: new Date(comment.createdAt),
                     updatedAt: new Date(comment.updatedAt)
                 };
-                console.log(commentToSendToReducer);
+                // console.log(commentToSendToReducer);
                 dispatch(addComment(commentToSendToReducer, commentToSendToReducer.post));
             }
             //TODO: ADD ERROR HANDLING
@@ -181,7 +181,7 @@ export function addLikeToStore<T extends 'Post' | 'Comment'>(id: string, likeTyp
                 'Content-Type':'application/x-www-form-urlencoded'
             }
         }).then(response => {
-            console.log('Data: ', response.data);
+            // console.log('Data: ', response.data);
             if (response.data.success){
                 if (likeType === 'Post'){
                     dispatch(updatePostLike(id, userId, response.data.data.deleted));
